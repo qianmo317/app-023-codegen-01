@@ -8,6 +8,8 @@ export default defineConfig({
   workers: 1,
   use: {
     baseURL: process.env.E2E_BASE_URL ?? 'http://localhost:4174',
+    // 默认用 headless shell；环境无法下载它时可设 E2E_CHANNEL=chromium 改用完整 Chromium
+    ...(process.env.E2E_CHANNEL ? { channel: process.env.E2E_CHANNEL } : {}),
     launchOptions: {
       args: ['--autoplay-policy=no-user-gesture-required', '--use-fake-device-for-media-stream'],
     },

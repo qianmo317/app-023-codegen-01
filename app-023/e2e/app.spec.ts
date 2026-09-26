@@ -206,6 +206,67 @@ test.describe('设置', () => {
   });
 });
 
+test.describe('节拍器', () => {
+  test('开始 → 预备小节 → 正式小节拍位显示 → 停止复位', async ({ page }) => {
+    await page.goto('#/metronome');
+    await expect(page.getByTestId('metronome-page')).toBeVisible();
+    await page.getByTestId('metro-beats-3').click(); // 三拍
+    await page.getByTestId('metro-start-bpm').fill('240'); // 快一点，缩短等待
+    await page.getByTestId('metro-toggle').click();
+    // 预备小节（首拍重音规则同样适用，界面显示「预备」）
+    await expect(page.getByTestId('metro-bar-label')).toHaveText('预备', { timeout: 3000 });
+    // 预备一小节后进入第 1 小节
+    await expect(page.getByTestId('metro-bar-label')).toHaveText('第 1 小节', { timeout: 5000 });
+    await expect(page.getByTestId('metro-beat-label')).toContainText('第');
+    // 停止 → 显示复位；再开始应重新从预备数起
+    await page.getByTestId('metro-toggle').click();
+    await expect(page.getByTestId('metro-bar-label')).toHaveText('—');
+    await page.getByTestId('metro-toggle').click();
+    await expect(page.getByTestId('metro-bar-label')).toHaveText('预备', { timeout: 3000 });
+    await page.getByTestId('metro-toggle').click();
+  });
+
+  test('验收：渐变过程每一拍间隔按当时目标速度逐拍计算（读取 __metro 钩子）', async ({ page }) => {
+    await page.goto('#/metronome');
+    await page.getByTestId('metro-beats-2').click();
+    await page.getByTestId('metro-start-bpm').fill('60');
+    await page.getByTestId('metro-ramp-bars').fill('2'); // 2 小节 × 2 拍 = 4 拍从 60 变到 240
+    await page.getByTestId('metro-end-bpm').fill('240');
+    await page.getByTestId('metro-toggle').click();
+    await expect
+      .poll(
+        async () =>
+          page.evaluate(
+            () => (window as unknown as { __metro?: () => { bpm: number; time: number }[] }).__metro?.().length ?? 0,
+          ),
+        { timeout: 8000, intervals: [200] },
+      )
+      .toBeGreaterThan(8); // 预备 2 拍 + 渐变 4 拍 + 稳定后若干拍
+    const errs = await page.evaluate(() => {
+      const beats = (window as unknown as { __metro?: () => { bpm: number; time: number }[] }).__metro?.() ?? [];
+      const out: number[] = [];
+      for (let i = 1; i < beats.length; i++) {
+        // 每一拍的实际间隔必须等于 60/前一拍的目标速度
+        out.push(Math.abs(beats[i].time - beats[i - 1].time - 60 / beats[i - 1].bpm));
+      }
+      return out;
+    });
+    expect(errs.length).toBeGreaterThan(7);
+    for (const e of errs) expect(e).toBeLessThan(0.01); // < 10ms
+    await page.getByTestId('metro-toggle').click();
+  });
+
+  test('播放中改拍号不打断走拍（拍位显示持续更新）', async ({ page }) => {
+    await page.goto('#/metronome');
+    await page.getByTestId('metro-start-bpm').fill('240');
+    await page.getByTestId('metro-toggle').click();
+    await expect(page.getByTestId('metro-bar-label')).toHaveText('预备', { timeout: 3000 });
+    await page.getByTestId('metro-beats-2').click(); // 走拍中改拍号
+    await expect(page.getByTestId('metro-bar-label')).toHaveText('第 1 小节', { timeout: 5000 });
+    await page.getByTestId('metro-toggle').click();
+  });
+});
+
 test.describe('性能', () => {
   test('验收：100 小节谱面滚动 ≥ 50fps', async ({ page }) => {
     await createEmptyScore(page, 'E2E 百小节');

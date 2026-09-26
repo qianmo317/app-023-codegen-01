@@ -78,12 +78,13 @@ npm run e2e        # Playwright E2E（13 个用例，自动起 4174 preview）
 | [lib/grid.ts](src/lib/grid.ts) | 时值↔格换算、step 偏移、拆格合并、宽度计算（编辑与打印共用同一函数，保证宽度一致） | `barTicks` `stepOffsets` `setStepAt` `scoreWidthPx` `barsPerRow` |
 | [lib/glyphs.ts](src/lib/glyphs.ts) | 拟音字↔乐器/技法反查、键位解析、防串乐器校验 | `buildGlyphMap` `resolveKey` `lookupGlyph` `validateHitGlyphs` |
 | [lib/audio.ts](src/lib/audio.ts) | 合成音（drum/metal/wood）、lookahead 调度器、事件展开 | `computeEvents` `computeLoopEvents` `scheduleEvents` `playRange` |
+| [lib/metronome.ts](src/lib/metronome.ts) | 排练节拍器：预备小节、首拍重音合成击拍、速度渐变（逐拍按当时目标速度算间隔）、配置实时读取（中途改参不打乱拍位） | `tempoAt` `beatAt` `advance` `synthesizeClick` `startMetronome` |
 | [lib/storage.ts](src/lib/storage.ts) | IndexedDB CRUD（scores/settings） | `listScores` `getScore` `saveScore` `deleteScore` |
 | [lib/factory.ts](src/lib/factory.ts) | JSON 默认数据 → 对象、曲牌 → Score 转换（跨小节自动切分补休止） | `scoreFromPattern` `newEmptyScore` `emptyBar` |
 | [hooks/useAudio.ts](src/hooks/useAudio.ts) | 播放状态集中管理：ctx/调度/循环/高亮/独奏静音 | `useAudio(score)` |
 | [components/ScoreGrid.tsx](src/components/ScoreGrid.tsx) | SVG 谱面：时间×乐器网格、时值线、tie 延伸、齐奏同列、选中光标、高亮列 | `<ScoreGrid>` |
 | [components/Transport.tsx](src/components/Transport.tsx) | 试听控制台：播放/BPM/循环/高亮开关 | `<Transport>` |
-| [pages/*](src/pages) | ScoreList / Editor / Print / Library / Settings 五个页面 | — |
+| [pages/*](src/pages) | ScoreList / Editor / Print / Library / Metronome / Settings 六个页面 | — |
 
 ## 4. 核心概念
 

@@ -133,6 +133,27 @@ kbd { background: #fff; border: 1px solid var(--border); border-bottom-width: 2p
 tr.waiting { background: #fff3cd; }
 input[type='number'] { width: 76px; border: 1px solid var(--border); border-radius: 3px; padding: 3px 6px; }
 
+/* ---- 节拍器 ---- */
+.metro-display {
+  border: 1px solid var(--border); border-radius: 8px; background: #fff;
+  padding: 20px 24px; margin: 14px 0; text-align: center;
+}
+.metro-position { display: flex; justify-content: center; align-items: baseline; gap: 18px; }
+.metro-bar { font-size: 30px; font-weight: 800; color: var(--red); }
+.metro-beat { font-size: 22px; font-weight: 600; }
+.metro-dots { display: flex; justify-content: center; gap: 14px; margin: 14px 0 8px; }
+.metro-dot {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid var(--border); background: var(--panel);
+}
+.metro-dot.accent { border-color: var(--red); }
+.metro-dot.on { background: var(--ink); border-color: var(--ink); }
+.metro-dot.accent.on { background: var(--red); border-color: var(--red); }
+.metro-bpm-now { color: var(--dim); font-size: 13px; }
+.metro-row { display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap; margin: 8px 0; }
+.metro-field { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--dim); }
+.metro-toggle { min-width: 120px; font-size: 16px; padding: 8px 20px; }
+
 /* ---- 手机横屏 ---- */
 @media (max-width: 760px) {
   .editor-body { flex-direction: column; }

@@ -1,10 +1,11 @@
-// 极简 hash 路由：/ 曲目列表 · /score/:id 编辑器 · /score/:id/print 打印 · /library 曲牌库 · /settings 设置
+// 极简 hash 路由：/ 曲目列表 · /score/:id 编辑器 · /score/:id/print 打印 · /library 曲牌库 · /metronome 节拍器 · /settings 设置
 import { useEffect, useState, type ReactNode } from 'react';
 import { ScoreList } from './pages/ScoreList';
 import { Editor } from './pages/Editor';
 import { Print } from './pages/Print';
 import { Library } from './pages/Library';
 import { Settings } from './pages/Settings';
+import { Metronome } from './pages/Metronome';
 import { SettingsProvider } from './settingsContext';
 
 function parseHash(): { page: string; id?: string } {
@@ -14,6 +15,7 @@ function parseHash(): { page: string; id?: string } {
   m = h.match(/^\/score\/([^/]+)$/);
   if (m) return { page: 'editor', id: decodeURIComponent(m[1]) };
   if (h.startsWith('/library')) return { page: 'library' };
+  if (h.startsWith('/metronome')) return { page: 'metronome' };
   if (h.startsWith('/settings')) return { page: 'settings' };
   return { page: 'list' };
 }
@@ -30,6 +32,7 @@ function Nav() {
       <span className="brand">锣鼓经记谱</span>
       {item('#/', '曲目', 'nav-list')}
       {item('#/library', '曲牌库', 'nav-library')}
+      {item('#/metronome', '节拍器', 'nav-metronome')}
       {item('#/settings', '设置', 'nav-settings')}
     </nav>
   );
@@ -56,6 +59,7 @@ export function App() {
   if (route.page === 'editor') content = <Editor scoreId={route.id!} onNavigate={(h) => (window.location.hash = h)} />;
   else if (route.page === 'print') content = <Print scoreId={route.id!} />;
   else if (route.page === 'library') content = <Library />;
+  else if (route.page === 'metronome') content = <Metronome />;
   else if (route.page === 'settings') content = <Settings />;
   else content = <ScoreList />;
 
