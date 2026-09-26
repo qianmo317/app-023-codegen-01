@@ -140,3 +140,28 @@ input[type='number'] { width: 76px; border: 1px solid var(--border); border-radi
   .inst-panel h3, .inst-panel .hint { display: none; }
   .inst-row { flex-shrink: 0; }
 }
+
+/* ---- 节拍器 ---- */
+.metro-page { max-width: 760px; }
+.metro-panel { border: 1px solid var(--border); border-radius: 8px; background: #fff; padding: 18px 22px; margin-top: 14px; }
+.metro-display { text-align: center; padding: 18px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.metro-pos { font-size: 30px; font-weight: 800; letter-spacing: 2px; }
+.metro-pos .metro-beat { margin-left: 18px; color: var(--red); }
+.metro-dots { display: flex; gap: 14px; justify-content: center; margin: 14px 0 8px; }
+.metro-dot {
+  width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700; color: var(--dim); background: #fff;
+}
+.metro-dot.on { border-color: var(--red); color: var(--red); background: #fdecea; }
+.metro-dot.on-accent { border-color: var(--red); background: var(--red); color: #fff; }
+.metro-tempo { font-size: 14px; }
+.metro-controls { display: flex; flex-direction: column; gap: 14px; }
+.metro-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.metro-label { min-width: 96px; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+.metro-seg { display: flex; gap: 6px; }
+.metro-seg .btn-sm { padding: 4px 14px; font-size: 14px; }
+.metro-ramp { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.metro-bpm-input { width: 70px; text-align: center; font-size: 17px; font-weight: 700; }
+.metro-num-input { width: 64px; }
+.metro-start { padding: 8px 22px; font-size: 15px; }
